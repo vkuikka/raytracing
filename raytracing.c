@@ -37,7 +37,7 @@ float		ft_3d_plane(t_plane plane, t_ray ray)
 
 float		ft_3d_sphere(t_sphere sphere, t_ray ray)
 {
-	float	dot;
+	float	disc;
 
 	float	rsp[3];
 	rsp[0] = sphere.vec[0] - ray.pos[0];
@@ -47,11 +47,11 @@ float		ft_3d_sphere(t_sphere sphere, t_ray ray)
 	float a = ft_vector_dot(ray.dir, ray.dir);
 	float b = 2 * ft_vector_dot(ray.dir, rsp);
 	float c = ft_vector_dot(rsp, rsp) - sphere.r * sphere.r;
-	dot = b * b - 4 * a * c;
+	disc = b * b - 4 * a * c;
 
-	if (dot > 0)
-		return (dot);
-	return (0);
+	if (disc < 0)
+		return (0);
+	return (-((-b - sqrt(disc)) / (2.0 * a)));
 }
 
 void		ft_render(t_window window, t_sphere sphere, t_plane plane)
@@ -87,10 +87,16 @@ void		ft_render(t_window window, t_sphere sphere, t_plane plane)
 		{
 			ray.dir[1] += ray_increment_y;
 
-			res = ft_3d_plane(plane, ray);
+			res = ft_3d_sphere(sphere, ray);
+			// if (res == 0.0)
+			// {
+			// 	res = 1;
+			// 	printf("ASd\n");
+			// }
+			tmp = ft_3d_plane(plane, ray);
 
-			tmp = ft_3d_sphere(sphere, ray);
-			if (tmp > res)
+			// if ((int)res == -1)
+			if (res <= 0)
 				res = tmp;
 
 			SDL_SetRenderDrawColor(window.SDLrenderer, 255 * res, 255 * res, 255 * res, 255);
