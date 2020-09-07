@@ -18,18 +18,18 @@ float		ft_3d_plane(t_plane plane, t_ray ray)
 
 	res = ((ray.pos[0] * plane.vec[0]) +
 			(ray.pos[1] * plane.vec[1]) +
-			(ray.pos[2] * plane.vec[2])) /
+			(ray.pos[2] * plane.vec[2])) - plane.pos /
 			(ray.pos[0] * plane.vec[0] - ray.dir[0] * plane.vec[0] +
 			ray.pos[1] * plane.vec[1] - ray.dir[1] * plane.vec[1] +
 			ray.pos[2] * plane.vec[2] - ray.dir[2] * plane.vec[2]);
 
-	if (res < -ray.pos[2] && res > -10)
+	if (res > 0)
 	{
-		res *= -1;
-		res *= 10;
-		res += 0.1;
-		if (res > 1)
-			res = 1;
+		// res *= -1;
+		// res *= 10;
+		// res += 0.1;
+		// if (res > 1)
+		// 	res = 1;
 		return (res);
 	}
 	return (0);
@@ -49,9 +49,9 @@ float		ft_3d_sphere(t_sphere sphere, t_ray ray)
 	float c = ft_vector_dot(rsp, rsp) - sphere.r * sphere.r;
 	disc = b * b - 4 * a * c;
 
-	if (disc < 0)
+	if (disc <= 0)
 		return (0);
-	return (-((-b - sqrt(disc)) / (2.0 * a)));
+	return ((-b - sqrt(disc)) / (2.0 * a));
 }
 
 void		ft_render(t_window window, t_sphere sphere, t_plane plane)
@@ -86,20 +86,34 @@ void		ft_render(t_window window, t_sphere sphere, t_plane plane)
 		while (++y < RES_Y)
 		{
 			ray.dir[1] += ray_increment_y;
-
 			res = ft_3d_sphere(sphere, ray);
-			// if (res == 0.0)
-			// {
-			// 	res = 1;
-			// 	printf("ASd\n");
-			// }
 			tmp = ft_3d_plane(plane, ray);
 
-			// if ((int)res == -1)
-			if (res <= 0)
+			if (res >= 0)
+				res = 0;
+			if (tmp < 0)
+				tmp *= -1;
+			if (res < 0)
+				res *= -1;
+
+			if (res < 0.0)
+				res = 0;
+			if (tmp < 0.0)
+				tmp = 0;
+			
+			if ((tmp < res || res == 0) && tmp != 0)
 				res = tmp;
 
-			SDL_SetRenderDrawColor(window.SDLrenderer, 255 * res, 255 * res, 255 * res, 255);
+			if (y == RES_Y / 2 && x == RES_X / 2)
+				printf("%f\n", res);
+			if (res)
+			{
+				res /= 10;
+				SDL_SetRenderDrawColor(window.SDLrenderer, 255 * res, 255 * res, 255 * res, 255);
+				// SDL_SetRenderDrawColor(window.SDLrenderer, 255, 255, 255, 255);
+			}
+			else
+				SDL_SetRenderDrawColor(window.SDLrenderer, 0, 0, 0, 255);
 			SDL_RenderDrawPoint(window.SDLrenderer, x, y);
 
 		}

@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/07 20:34:32 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/07 21:23:00 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int		ft_buttons(int button, const int pressed)
 t_sphere	ft_loop(t_window *window, SDL_Texture *txt)
 {
 	static t_sphere sphere = {0, 0, 2, 1};
-	static t_plane	plane = {0, 0, 0.8};
+	static t_plane	plane = {0.5, 0.5, 0.4, 0.5};
 
 	if (ft_buttons(SDL_SCANCODE_1, -1))
 	{
@@ -81,6 +81,10 @@ t_sphere	ft_loop(t_window *window, SDL_Texture *txt)
 		plane.vec[1] -= 0.1;
 	if (ft_buttons(ARROW_D, -1))
 		plane.vec[1] += 0.1;
+	if (ft_buttons(SDL_SCANCODE_3, -1))
+		plane.pos -= 0.1;
+	if (ft_buttons(SDL_SCANCODE_4, -1))
+		plane.pos += 0.1;
 
 	if (ft_buttons(A_KEY, -1))
 	{

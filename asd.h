@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:50 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/07 20:23:16 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/07 21:19:39 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct		s_ray
 typedef struct		s_plane
 {
 	float			vec[3];
+	float			pos;
 }					t_plane;
 
 typedef struct		s_sphere
