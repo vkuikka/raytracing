@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/07 15:44:46 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/07 20:34:32 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,71 +57,62 @@ int		ft_buttons(int button, const int pressed)
 	return (0);
 }
 
-float	ft_loop(t_window *window, SDL_Texture *txt)
+t_sphere	ft_loop(t_window *window, SDL_Texture *txt)
 {
-	static float	mid = 4;
-	static int		coord1[2] = {0, 0};
-	static int		coord2[2] = {0, 0};
-	static t_sphere sphere = {0.01, 0.01, 4, 1};
+	static t_sphere sphere = {0, 0, 2, 1};
+	static t_plane	plane = {0, 0, 0.8};
 
-	if (ft_buttons(SDL_SCANCODE_1, -1))// && mid < 1)
+	if (ft_buttons(SDL_SCANCODE_1, -1))
 	{
-		mid += 0.05;
-		sphere.r += 0.05;
+		sphere.r += 0.01;
 		printf("r: %f\n", sphere.r);
 	}
-	if (ft_buttons(SDL_SCANCODE_2, -1))// && mid > 0)
+	if (ft_buttons(SDL_SCANCODE_2, -1))
 	{
-		mid -= 0.05;
-		sphere.r -= 0.05;
+		sphere.r -= 0.01;
 		printf("r: %f\n", sphere.r);
 	}
 
-	if (ft_buttons(ARROW_L, -1) && mid < RES_X)
-		coord1[0] -= 1;
-	if (ft_buttons(ARROW_R, -1) && mid > 0)
-		coord1[0] += 1;
-	if (ft_buttons(ARROW_U, -1) && mid < RES_Y)
-		coord1[1] -= 1;
-	if (ft_buttons(ARROW_D, -1) && mid > 0)
-		coord1[1] += 1;
+	if (ft_buttons(ARROW_L, -1))
+		plane.vec[0] -= 0.1;
+	if (ft_buttons(ARROW_R, -1))
+		plane.vec[0] += 0.1;
+	if (ft_buttons(ARROW_U, -1))
+		plane.vec[1] -= 0.1;
+	if (ft_buttons(ARROW_D, -1))
+		plane.vec[1] += 0.1;
 
-	if (ft_buttons(A_KEY, -1) && mid < RES_X)
+	if (ft_buttons(A_KEY, -1))
 	{
-		sphere.x -= 0.1;
-		coord2[0] -= 1;
-		printf("x: %f\n", sphere.x);
+		sphere.vec[0] -= 0.1;
+		printf("x: %f\n", sphere.vec[0]);
 	}
-	if (ft_buttons(D_KEY, -1) && mid > 0)
+	if (ft_buttons(D_KEY, -1))
 	{
-		sphere.x += 0.1;
-		coord2[0] += 1;
-		printf("x: %f\n", sphere.x);
+		sphere.vec[0] += 0.1;
+		printf("x: %f\n", sphere.vec[0]);
 	}
-	if (ft_buttons(W_KEY, -1) && mid < RES_Y)
+	if (ft_buttons(W_KEY, -1))
 	{
-		sphere.y -= 0.1;
-		coord2[1] -= 1;
-		printf("y: %f\n", sphere.y);
+		sphere.vec[1] -= 0.1;
+		printf("y: %f\n", sphere.vec[1]);
 	}
-	if (ft_buttons(S_KEY, -1) && mid > 0)
+	if (ft_buttons(S_KEY, -1))
 	{
-		sphere.y += 0.1;
-		coord2[1] += 1;
-		printf("y: %f\n", sphere.y);
+		sphere.vec[1] += 0.1;
+		printf("y: %f\n", sphere.vec[1]);
 	}
-	if (ft_buttons(Q_KEY, -1) && mid > 0)
+	if (ft_buttons(Q_KEY, -1))
 	{
-		sphere.z -= 0.1;
-		coord2[1] -= 1;
-		printf("z: %f\n", sphere.z);
+		sphere.vec[2] -= 0.1;
+		printf("z: %f\n", sphere.vec[2]);
 	}
-	if (ft_buttons(E_KEY, -1) && mid > 0)
+	if (ft_buttons(E_KEY, -1))
 	{
-		sphere.z += 0.1;
-		coord2[1] += 1;
-		printf("z: %f\n", sphere.z);
+		sphere.vec[2] += 0.1;
+		printf("z: %f\n", sphere.vec[2]);
 	}
+	
 
 	SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);
 	SDL_SetRenderTarget(window->SDLrenderer, NULL);
@@ -131,15 +122,15 @@ float	ft_loop(t_window *window, SDL_Texture *txt)
 	SDL_SetRenderTarget(window->SDLrenderer, txt);
 
 	SDL_RenderClear(window->SDLrenderer);
-	// ft_3d_plane(window, mid);
-	ft_3d_sphere(window, sphere);
+
+	ft_render(*window, sphere, plane);
 
 	// ft_smooth_step(mid * 10, window);
 	SDL_SetRenderTarget(window->SDLrenderer, NULL);
 	SDL_RenderCopy(window->SDLrenderer, txt, NULL, NULL);
 	SDL_RenderPresent(window->SDLrenderer);
 	// printf("%f\n", mid);
-	return (mid);
+	return (sphere);
 }
 
 int			main(int argc, char **argv)
@@ -157,7 +148,11 @@ int			main(int argc, char **argv)
 	if (!(window->SDLrenderer = SDL_CreateRenderer(window->SDLwindow, -1, 0)))
 		ft_error("could not create renderer");
 	txt = ft_empty_texture(window->SDLrenderer);
-	float mid;
+	t_sphere	sphere;
+	t_plane	plane;
+	plane.vec[0] = 0.1;
+	plane.vec[1] = 0.1;
+	plane.vec[2] = 0.8;
 	while (1)
 	{
 		while (SDL_PollEvent(&event))
@@ -179,16 +174,15 @@ int			main(int argc, char **argv)
 			{
 				SDL_SetRenderTarget(window->SDLrenderer, txt);
 				SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);
-				SDL_RenderClear(window->SDLrenderer);
-				// ft_3d_plane(window, mid);
-				// ft_3d_sphere(window, mid);
+
+				ft_render(*window, sphere, plane);
 
 				SDL_SetRenderTarget(window->SDLrenderer, NULL);
 				SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);
 				SDL_RenderCopy(window->SDLrenderer, txt, NULL, NULL);
 			}
 		}
-		mid = ft_loop(window, txt);
+		sphere = ft_loop(window, txt);
 	}
 	argc = 0;
 	argv = NULL;

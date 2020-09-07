@@ -12,162 +12,97 @@
 
 #include "asd.h"
 
-void		ft_3d_plane(t_window *window, float mid)
+float		ft_3d_plane(t_plane plane, t_ray ray)
 {
-	float	rayline[6];
-	float	point_mid;
-	t_plane	plane;
-	t_ray	ray;
+	float res;
 
-	plane.x = 1;
-	plane.y = mid;
-	plane.z = 1;
+	res = ((ray.pos[0] * plane.vec[0]) +
+			(ray.pos[1] * plane.vec[1]) +
+			(ray.pos[2] * plane.vec[2])) /
+			(ray.pos[0] * plane.vec[0] - ray.dir[0] * plane.vec[0] +
+			ray.pos[1] * plane.vec[1] - ray.dir[1] * plane.vec[1] +
+			ray.pos[2] * plane.vec[2] - ray.dir[2] * plane.vec[2]);
 
-	ray.x = 0;
-	ray.y = 0;
-	ray.z = 0;
-
-	rayline[0] = 0.001;
-	rayline[1] = 0.001;
-	rayline[2] = 0.001;
-
-	rayline[3] = 0;
-	rayline[4] = 0;
-	rayline[5] = 1;
-
-
-	float	fov = 1;
-	rayline[3] = 0 - fov / 2;
-	rayline[4] = 0 - fov / 2;
-	rayline[5] = 1;
-
-	SDL_SetRenderDrawColor(window->SDLrenderer, 255, 255, 255, 255);
-	float	ray_increment_x = fov / (float)RES_X;
-	float	ray_increment_y = fov / (float)RES_Y;
-
-	int x = -1;
-	int y = -1;
-	while (++x < RES_X)
+	if (res < -ray.pos[2] && res > -10)
 	{
-		rayline[3] += ray_increment_x;
-		rayline[4] = 0 - fov / 2;
-		y = 0;
-		while (++y < RES_Y)
-		{
-			point_mid = 0.001;
-			rayline[4] += ray_increment_y;
-			point_mid = ((rayline[0] * plane.x) +
-						(rayline[1] * plane.y) +
-						(rayline[2] * plane.z)) /
-					(rayline[0] * plane.x - rayline[3] * plane.x +
-					rayline[1] * plane.y - rayline[4] * plane.y +
-					rayline[2] * plane.z - rayline[5] * plane.z);
-
-			if (point_mid < -rayline[2] && point_mid > -10)
-			{
-				point_mid *= -1;
-				point_mid *= 10;
-				point_mid += 0.1;
-				if (point_mid > 1)
-					point_mid = 1;
-
-				SDL_SetRenderDrawColor(window->SDLrenderer, 255 * point_mid, 255 * point_mid, 255 * point_mid, 255);
-			}
-			else
-				SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);
-			SDL_RenderDrawPoint(window->SDLrenderer, x, y);
-		}
+		res *= -1;
+		res *= 10;
+		res += 0.1;
+		if (res > 1)
+			res = 1;
+		return (res);
 	}
+	return (0);
 }
 
-void		ft_3d_sphere(t_window *window, t_sphere sphere)
+float		ft_3d_sphere(t_sphere sphere, t_ray ray)
 {
-	float		rayline[6];
-	float		point_mid;
+	float	dot;
+
+	float	rsp[3];
+	rsp[0] = sphere.vec[0] - ray.pos[0];
+	rsp[1] = sphere.vec[1] - ray.pos[1];
+	rsp[2] = sphere.vec[2] - ray.pos[2];
+
+	float a = ft_vector_dot(ray.dir, ray.dir);
+	float b = 2 * ft_vector_dot(ray.dir, rsp);
+	float c = ft_vector_dot(rsp, rsp) - sphere.r * sphere.r;
+	dot = b * b - 4 * a * c;
+
+	if (dot > 0)
+		return (dot);
+	return (0);
+}
+
+void		ft_render(t_window window, t_sphere sphere, t_plane plane)
+{
+	float		ray_increment_x;
+	float		ray_increment_y;
 	t_ray		ray;
+	int			x;
+	int			y;
 
-	// sphere.x = 0.01;
-	// sphere.y = 0.01;
-	// sphere.z = mid;
-	// sphere.r = 1;
-	// // sphere.r = 4.5;
-
-	ray.x = 0;
-	ray.y = 0;
-	ray.z = 0;
-
-	rayline[0] = 0.001;
-	rayline[1] = 0.001;
-	rayline[2] = 0.001;
+	ray.pos[0] = 0.001;
+	ray.pos[1] = 0.001;
+	ray.pos[2] = 0.001;
 
 	float	fov = 1;
-	rayline[3] = 0 - fov / 2;
-	rayline[4] = 0 - fov / 2;
-	rayline[5] = fov;
+	ray.dir[0] = 0 - fov / 2;
+	ray.dir[1] = 0 - fov / 2;
+	ray.dir[2] = fov;
+	ray_increment_x = fov / RES_X;
+	ray_increment_y = fov / RES_Y;
 
-	SDL_SetRenderDrawColor(window->SDLrenderer, 255, 255, 255, 255);
-	int x = -1;
-	int y = -1;
 
-	float	ray_increment_x = fov / (float)RES_X;
-	float	ray_increment_y = fov / (float)RES_Y;
-
+	x = -1;
+	y = -1;
+	float res;
+	float tmp;
 	while (++x < RES_X)
 	{
 		y = 0;
-		rayline[3] += ray_increment_x;
-		rayline[4] = 0 - fov / 2;
+		ray.dir[0] += ray_increment_x;
+		ray.dir[1] = 0 - fov / 2;
 		while (++y < RES_Y)
 		{
-			point_mid = 0;
-			rayline[4] += ray_increment_y;
-			// while (point_mid < 5)
-			// {
-			// 	ray.x = (1 - point_mid) * rayline[0] + point_mid * rayline[3];
-			// 	ray.y = (1 - point_mid) * rayline[1] + point_mid * rayline[4];
-			// 	ray.z = (1 - point_mid) * rayline[2] + point_mid * rayline[5];
-			// 	ray.x -= sphere.x;
-			// 	ray.y -= sphere.y;
-			// 	ray.z -= sphere.z;
-			// 	float	res = ray.x * ray.x +
-			// 					ray.y * ray.y +
-			// 					ray.z * ray.z;
-			
-				double	spr = sphere.r * sphere.r;
+			ray.dir[1] += ray_increment_y;
 
-				double sqrtable = -rayline[1] * -rayline[1] + 2 * rayline[1] * rayline[4] - rayline[4] * rayline[4] -
-									rayline[2] * rayline[2] + 2 * rayline[2] * rayline[5] - rayline[5] * rayline[5];
-				// printf("%f ", sqrtable);
-				// int negat = 0;
-				if (sqrtable < 0)
-				{
-					sqrtable *= -1;
-				}
-				double tmp = sqrt(sqrtable);
-				// if (x > RES_X / 2)
-				// 	tmp *= -1;
+			res = ft_3d_plane(plane, ray);
 
-				point_mid = (rayline[3] * rayline[3] - 2 * rayline[3] * sphere.x + 2 * rayline[3] * tmp + sphere.x * sphere.x -
-							2 * sphere.x * tmp + 2 * rayline[1] * rayline[4] - 2 * rayline[1] * rayline[4] - 2 * rayline[1] * sphere.y - rayline[4] * rayline[4] + sphere.y * sphere.y +
-							2 * rayline[2] * rayline[5] - 2 * rayline[2] * sphere.z - rayline[5] * rayline[5] + sphere.z * sphere.z - sphere.r * sphere.r) /
-							(2 * (rayline[3] * tmp - sphere.x * tmp +
-rayline[1] * rayline[4] - rayline[1] * sphere.y - rayline[4] * rayline[4] + rayline[4] * sphere.y + rayline[2] * rayline[5] - rayline[2] * sphere.z - rayline[5] * rayline[5] + rayline[5] * sphere.z));
+			tmp = ft_3d_sphere(sphere, ray);
+			if (tmp > res)
+				res = tmp;
 
-				double res = point_mid;
-				// if (res >= spr && res < spr + 1)
-				if (res > 0)
-				{
-					// res /= 10;
-					// SDL_SetRenderDrawColor(window->SDLrenderer, 255, 0, 0, 255);
-					SDL_SetRenderDrawColor(window->SDLrenderer, 255 * res, 255 * res, 255 * res, 255);
-					SDL_RenderDrawPoint(window->SDLrenderer, x, y);
-					// SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);
-				}
-			// 	point_mid += 0.1;
-			// }
+			SDL_SetRenderDrawColor(window.SDLrenderer, 255 * res, 255 * res, 255 * res, 255);
+			SDL_RenderDrawPoint(window.SDLrenderer, x, y);
+
 		}
 		// printf("\n");
 	}
+	// printf("\n");
+
+
+
 }
 
 /*

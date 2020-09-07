@@ -6,12 +6,12 @@
 #    By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/08 13:46:11 by vkuikka           #+#    #+#              #
-#    Updated: 2020/09/04 20:03:09 by vkuikka          ###   ########.fr        #
+#    Updated: 2020/09/07 18:21:16 by vkuikka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = asd
-FILES = main.c smoothstep.c weighted_avg.c draw.c raytracing.c
+FILES = main.c smoothstep.c weighted_avg.c draw.c raytracing.c vectors.c
 LIB = libft/libft.a
 INCLUDE = libft/includes
 #FLAGS = -Wall -Wextra -Werror

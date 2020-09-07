@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:50 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/07 15:42:48 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/07 20:23:16 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,33 +53,39 @@ typedef struct		s_window
 	SDL_Window		*SDLwindow;
 }					t_window;
 
+typedef struct		s_vector
+{
+	float			vector[3];
+}					t_vector;
+
 typedef struct		s_ray
 {
-	float			x;
-	float			y;
-	float			z;
+	float			pos[3];
+	float			dir[3];
 }					t_ray;
 
 typedef struct		s_plane
 {
-	float			x;
-	float			y;
-	float			z;
+	float			vec[3];
 }					t_plane;
 
 typedef struct		s_sphere
 {
-	double			x;
-	double			y;
-	double			z;
-	double			r;
+	float			vec[3];
+	float			r;
 }					t_sphere;
 
 void		ft_smooth_step(float mid, t_window *window);
 void		ft_2d_weighted_avg(float mid, t_window *window, int line1[2], int line2[2]);
 void		ft_2d_lines(float mid, t_window *window, int x, int y);
 void		ft_draw_line(int line[4], t_window *window, float mid);//unsigned c2)
-void		ft_3d_plane(t_window *window, float mid);
-void		ft_3d_sphere(t_window *window, t_sphere sphere);
+
+void		ft_normalize_two(float vec1[3], float vec2[3]);
+void		ft_normalize(float vec1[3]);
+
+double		ft_vector_length(float vec[3]);
+double		ft_vector_dot(float ve1[3], float ve2[3]);
+
+void		ft_render(t_window window, t_sphere sphere, t_plane plane);
 
 #endif
