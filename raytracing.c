@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 20:02:39 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/04 23:48:43 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/07 15:43:18 vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,18 +80,17 @@ void		ft_3d_plane(t_window *window, float mid)
 	}
 }
 
-void		ft_3d_sphere(t_window *window, float mid)
+void		ft_3d_sphere(t_window *window, t_sphere sphere)
 {
 	float		rayline[6];
 	float		point_mid;
-	t_sphere	sphere;
 	t_ray		ray;
 
-	sphere.x = 0.01;
-	sphere.y = 0.01;
-	sphere.z = mid;
-	sphere.r = 1;
-	// sphere.r = 4.5;
+	// sphere.x = 0.01;
+	// sphere.y = 0.01;
+	// sphere.z = mid;
+	// sphere.r = 1;
+	// // sphere.r = 4.5;
 
 	ray.x = 0;
 	ray.y = 0;
@@ -133,7 +132,8 @@ void		ft_3d_sphere(t_window *window, float mid)
 			// 	float	res = ray.x * ray.x +
 			// 					ray.y * ray.y +
 			// 					ray.z * ray.z;
-				float	spr = sphere.r * sphere.r;
+			
+				double	spr = sphere.r * sphere.r;
 
 				double sqrtable = -rayline[1] * -rayline[1] + 2 * rayline[1] * rayline[4] - rayline[4] * rayline[4] -
 									rayline[2] * rayline[2] + 2 * rayline[2] * rayline[5] - rayline[5] * rayline[5];
@@ -143,7 +143,7 @@ void		ft_3d_sphere(t_window *window, float mid)
 				{
 					sqrtable *= -1;
 				}
-				float tmp = sqrt(sqrtable);
+				double tmp = sqrt(sqrtable);
 				// if (x > RES_X / 2)
 				// 	tmp *= -1;
 
@@ -154,8 +154,8 @@ void		ft_3d_sphere(t_window *window, float mid)
 rayline[1] * rayline[4] - rayline[1] * sphere.y - rayline[4] * rayline[4] + rayline[4] * sphere.y + rayline[2] * rayline[5] - rayline[2] * sphere.z - rayline[5] * rayline[5] + rayline[5] * sphere.z));
 
 			// printf("%f\n", tmp);
-				float res = point_mid;
-				if (res >= spr && res < spr + 1)
+				double res = point_mid;
+				// if (res >= spr && res < spr + 1)
 				{
 					// res /= 10;
 					// SDL_SetRenderDrawColor(window->SDLrenderer, 255, 0, 0, 255);

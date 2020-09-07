@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/04 23:43:42 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/07 15:44:46 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,16 +62,19 @@ float	ft_loop(t_window *window, SDL_Texture *txt)
 	static float	mid = 4;
 	static int		coord1[2] = {0, 0};
 	static int		coord2[2] = {0, 0};
+	static t_sphere sphere = {0.01, 0.01, 4, 1};
 
 	if (ft_buttons(SDL_SCANCODE_1, -1))// && mid < 1)
 	{
 		mid += 0.05;
-		printf("%f\n", mid);
+		sphere.r += 0.05;
+		printf("r: %f\n", sphere.r);
 	}
 	if (ft_buttons(SDL_SCANCODE_2, -1))// && mid > 0)
 	{
 		mid -= 0.05;
-		printf("%f\n", mid);
+		sphere.r -= 0.05;
+		printf("r: %f\n", sphere.r);
 	}
 
 	if (ft_buttons(ARROW_L, -1) && mid < RES_X)
@@ -84,25 +87,52 @@ float	ft_loop(t_window *window, SDL_Texture *txt)
 		coord1[1] += 1;
 
 	if (ft_buttons(A_KEY, -1) && mid < RES_X)
+	{
+		sphere.x -= 0.1;
 		coord2[0] -= 1;
+		printf("x: %f\n", sphere.x);
+	}
 	if (ft_buttons(D_KEY, -1) && mid > 0)
+	{
+		sphere.x += 0.1;
 		coord2[0] += 1;
+		printf("x: %f\n", sphere.x);
+	}
 	if (ft_buttons(W_KEY, -1) && mid < RES_Y)
+	{
+		sphere.y -= 0.1;
 		coord2[1] -= 1;
+		printf("y: %f\n", sphere.y);
+	}
 	if (ft_buttons(S_KEY, -1) && mid > 0)
+	{
+		sphere.y += 0.1;
 		coord2[1] += 1;
-	
+		printf("y: %f\n", sphere.y);
+	}
+	if (ft_buttons(Q_KEY, -1) && mid > 0)
+	{
+		sphere.z -= 0.1;
+		coord2[1] -= 1;
+		printf("z: %f\n", sphere.z);
+	}
+	if (ft_buttons(E_KEY, -1) && mid > 0)
+	{
+		sphere.z += 0.1;
+		coord2[1] += 1;
+		printf("z: %f\n", sphere.z);
+	}
 
-	// SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);
-	// SDL_SetRenderTarget(window->SDLrenderer, NULL);
-	// SDL_RenderClear(window->SDLrenderer);
+	SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);
+	SDL_SetRenderTarget(window->SDLrenderer, NULL);
+	SDL_RenderClear(window->SDLrenderer);
 
 
-	// SDL_SetRenderTarget(window->SDLrenderer, txt);
+	SDL_SetRenderTarget(window->SDLrenderer, txt);
 
-	// SDL_RenderClear(window->SDLrenderer);
-	// // ft_3d_plane(window, mid);
-	// ft_3d_sphere(window, mid);
+	SDL_RenderClear(window->SDLrenderer);
+	// ft_3d_plane(window, mid);
+	ft_3d_sphere(window, sphere);
 
 	// ft_smooth_step(mid * 10, window);
 	SDL_SetRenderTarget(window->SDLrenderer, NULL);
@@ -151,7 +181,7 @@ int			main(int argc, char **argv)
 				SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);
 				SDL_RenderClear(window->SDLrenderer);
 				// ft_3d_plane(window, mid);
-				ft_3d_sphere(window, mid);
+				// ft_3d_sphere(window, mid);
 
 				SDL_SetRenderTarget(window->SDLrenderer, NULL);
 				SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);
