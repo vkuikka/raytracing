@@ -149,13 +149,13 @@ void		ft_3d_sphere(t_window *window, t_sphere sphere)
 
 				point_mid = (rayline[3] * rayline[3] - 2 * rayline[3] * sphere.x + 2 * rayline[3] * tmp + sphere.x * sphere.x -
 							2 * sphere.x * tmp + 2 * rayline[1] * rayline[4] - 2 * rayline[1] * rayline[4] - 2 * rayline[1] * sphere.y - rayline[4] * rayline[4] + sphere.y * sphere.y +
-							2 * rayline[2] * rayline[5] - 2 * rayline[2] * sphere.z - rayline[5] * rayline[5] + sphere.z * sphere.z) /
+							2 * rayline[2] * rayline[5] - 2 * rayline[2] * sphere.z - rayline[5] * rayline[5] + sphere.z * sphere.z - sphere.r * sphere.r) /
 							(2 * (rayline[3] * tmp - sphere.x * tmp +
 rayline[1] * rayline[4] - rayline[1] * sphere.y - rayline[4] * rayline[4] + rayline[4] * sphere.y + rayline[2] * rayline[5] - rayline[2] * sphere.z - rayline[5] * rayline[5] + rayline[5] * sphere.z));
 
-			// printf("%f\n", tmp);
 				double res = point_mid;
 				// if (res >= spr && res < spr + 1)
+				if (res > 0)
 				{
 					// res /= 10;
 					// SDL_SetRenderDrawColor(window->SDLrenderer, 255, 0, 0, 255);
