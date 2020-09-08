@@ -18,8 +18,10 @@ char	**ft_add_str(char *str, char **arr, unsigned arrlen)
 	unsigned	i;
 
 	i = 0;
-	if (!str || !arr || arrlen < 1)
+	if (!str)
 		return (arr);
+	if (!arr)
+		arrlen = 0;
 	while (i < arrlen && arr[i])
 		i++;
 	arrlen = i + 1;
