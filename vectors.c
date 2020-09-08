@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "asd.h"
+#include "rt.h"
 
 void		ft_normalize_two(float vec1[3], float vec2[3])
 {

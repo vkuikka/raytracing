@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = asd
+NAME = RTv1
 FILES = main.c smoothstep.c weighted_avg.c draw.c raytracing.c vectors.c
 LIB = libft/libft.a
 INCLUDE = libft/includes
@@ -20,15 +20,15 @@ INCLUDE = libft/includes
 all: $(NAME)
 
 $(NAME):
-	#@make -C libft
+	@make -C libft
 	gcc $(FLAGS) -framework SDL2 -framework SDL2_image -F ./ $(FILES) $(LIB) -I $(INCLUDE) -o $(NAME) -rpath @executable_path
 
 clean:
-	#@make clean -C libft
+	@make clean -C libft
 
 fclean: clean
 	rm -f $(NAME)
-	#@make fclean -C libft
+	@make fclean -C libft
 
 re: fclean
 	make all

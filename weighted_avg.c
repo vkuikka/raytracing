@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "asd.h"
+#include "rt.h"
 
 void		ft_2d_weighted_avg(float mid, t_window *window, int line1[4], int line2[4])
 {

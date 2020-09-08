@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "asd.h"
+#include "rt.h"
 
 float		ft_3d_plane(t_plane plane, t_ray ray)
 {

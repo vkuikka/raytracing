@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "asd.h"
+#include "rt.h"
 
 void		ft_smooth_step(float mid, t_window *window)
 {
