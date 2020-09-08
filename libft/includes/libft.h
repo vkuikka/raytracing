@@ -23,6 +23,7 @@ typedef struct		s_list
 	struct s_list	*next;
 }					t_list;
 
+char				**ft_add_str(char *str, char **arr, unsigned arrlen);
 void				ft_error(char *message);
 int					*ft_arrdup(const int *src, const int len);
 void				ft_quicksort(int *nums, int index, int len);
