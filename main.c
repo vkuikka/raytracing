@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/07 21:23:00 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/08 12:22:56 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,16 @@ int		ft_buttons(int button, const int pressed)
 
 t_sphere	ft_loop(t_window *window, SDL_Texture *txt)
 {
-	static t_sphere sphere = {0, 0, 2, 1};
-	static t_plane	plane = {0.5, 0.5, 0.4, 0.5};
+	static t_sphere sphere = {-0.9, -0.9, 4.6, 1};
+	static t_plane	plane = {0, 1, 0.4, 3.3};
+	static t_light	light = {-10, -10, 1, 1};
 
+	if (ft_buttons(SDL_SCANCODE_ESCAPE, -1))
+	{
+		printf("sphere:\nx: %f\ny: %f\nz: %f\nr: %f\n", sphere.vec[0], sphere.vec[1], sphere.vec[2], sphere.r);
+		printf("plane:\nx: %f\ny: %f\nz: %f\nr: %f\n", plane.vec[0], plane.vec[1], plane.vec[2], plane.pos);
+		exit(1);
+	}
 	if (ft_buttons(SDL_SCANCODE_1, -1))
 	{
 		sphere.r += 0.01;
@@ -72,6 +79,14 @@ t_sphere	ft_loop(t_window *window, SDL_Texture *txt)
 		sphere.r -= 0.01;
 		printf("r: %f\n", sphere.r);
 	}
+	if (ft_buttons(SDL_SCANCODE_3, -1))
+		plane.pos -= 0.1;
+	if (ft_buttons(SDL_SCANCODE_4, -1))
+		plane.pos += 0.1;
+	if (ft_buttons(SDL_SCANCODE_9, -1))
+		light.vec[0] -= 1;
+	if (ft_buttons(SDL_SCANCODE_0, -1))
+		light.vec[0] += 1;
 
 	if (ft_buttons(ARROW_L, -1))
 		plane.vec[0] -= 0.1;
@@ -81,10 +96,6 @@ t_sphere	ft_loop(t_window *window, SDL_Texture *txt)
 		plane.vec[1] -= 0.1;
 	if (ft_buttons(ARROW_D, -1))
 		plane.vec[1] += 0.1;
-	if (ft_buttons(SDL_SCANCODE_3, -1))
-		plane.pos -= 0.1;
-	if (ft_buttons(SDL_SCANCODE_4, -1))
-		plane.pos += 0.1;
 
 	if (ft_buttons(A_KEY, -1))
 	{
@@ -127,7 +138,7 @@ t_sphere	ft_loop(t_window *window, SDL_Texture *txt)
 
 	SDL_RenderClear(window->SDLrenderer);
 
-	ft_render(*window, sphere, plane);
+	ft_render(*window, sphere, plane, light);
 
 	// ft_smooth_step(mid * 10, window);
 	SDL_SetRenderTarget(window->SDLrenderer, NULL);
@@ -147,7 +158,7 @@ int			main(int argc, char **argv)
 		ft_error("could not initialize SDL\n");
 	if (!(window = (t_window *)malloc(sizeof(t_window))))
 		ft_error("memory allocation failed\n");
-	if (!(window->SDLwindow = SDL_CreateWindow("MATH", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, RES_X, RES_Y, 0)))
+	if (!(window->SDLwindow = SDL_CreateWindow("RTv1", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, RES_X, RES_Y, 0)))
 		ft_error("could not create window");
 	if (!(window->SDLrenderer = SDL_CreateRenderer(window->SDLwindow, -1, 0)))
 		ft_error("could not create renderer");
@@ -161,7 +172,7 @@ int			main(int argc, char **argv)
 	{
 		while (SDL_PollEvent(&event))
 		{
-			if (event.type == SDL_QUIT || event.key.keysym.scancode == ESC)
+			if (event.type == SDL_QUIT)// || event.key.keysym.scancode == ESC)
 				return (0);
 			else if (event.key.repeat == 0 && event.type == SDL_KEYDOWN)
 				ft_buttons(event.key.keysym.scancode, 1);
@@ -179,7 +190,7 @@ int			main(int argc, char **argv)
 				SDL_SetRenderTarget(window->SDLrenderer, txt);
 				SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);
 
-				ft_render(*window, sphere, plane);
+				// ft_render(*window, sphere, plane);
 
 				SDL_SetRenderTarget(window->SDLrenderer, NULL);
 				SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);

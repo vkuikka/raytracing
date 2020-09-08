@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   asd.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:50 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/07 21:19:39 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/08 12:18:53 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,15 @@ typedef struct		s_ray
 {
 	float			pos[3];
 	float			dir[3];
+	float			normal[3];
+	float			reflect[3];
 }					t_ray;
+
+typedef struct		s_light
+{
+	float			vec[3];
+	float			intensity;
+}					t_light;
 
 typedef struct		s_plane
 {
@@ -87,6 +95,6 @@ void		ft_normalize(float vec1[3]);
 double		ft_vector_length(float vec[3]);
 double		ft_vector_dot(float ve1[3], float ve2[3]);
 
-void		ft_render(t_window window, t_sphere sphere, t_plane plane);
+void		ft_render(t_window window, t_sphere sphere, t_plane plane, t_light light);
 
 #endif
