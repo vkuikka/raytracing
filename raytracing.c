@@ -64,17 +64,17 @@ float		ft_3d_sphere(t_objects *sphere, t_ray ray)
 	// return ((-b - sqrt(disc)) / (2.0 * a));
 }
 
-float		ft_choose_obj(t_ray ray, t_objects *obj, t_ray view)
+float		ft_choose_obj(t_ray ray, t_objects *obj)
 {
 	// if (type == 1)
 	// 	hit = ft_3d_cone(world->obj, world->view);
 	if (obj->type == 2)
-		return(ft_3d_plane(obj, view));
+		return(ft_3d_plane(obj, ray));
 	else if (obj->type == 3)
-		return(ft_3d_sphere(obj, view));
+		return(ft_3d_sphere(obj, ray));
 	// else if (type == 4)
 	// 	return(ft_3d_cylinder(world->obj, world->view));
-	ft_error("wtf\n");
+	ft_error("object not valid yet pls\n");
 	return (0);
 }
 
@@ -90,19 +90,19 @@ float		ft_trace_ray(t_objects *obj, t_objects *lights, t_ray ray, int bounces)
 	hit_obj = NULL;
 	while (obj)
 	{
-		hit = ft_choose_obj(ray, obj, ray);
-		if ((hit && hit < tmp) || !tmp && (bounces == 0 || ray.obj_index != obj->index))
+		hit = ft_choose_obj(ray, obj);
+		// if ((hit && hit < tmp) || !tmp && (bounces == 0 || ray.obj_index != obj->index))
+		if (!(bounces && obj->type == 2))
+		if (((hit && hit < tmp) || !tmp) && ray.obj_index != obj->index)
 		{
 			tmp = hit;
 			hit_obj = obj;
-			ray.obj_index = obj->index;
 		}
-		if (bounces)
-			break ;
 		obj = obj->next;
 	}
 	if (!hit_obj)
 		return (0);
+	ray.obj_index = hit_obj->index;
 	float res = tmp;
 	ray.normal[0] = res * ray.dir[0] - hit_obj->vec[0];
 	ray.normal[1] = res * ray.dir[1] - hit_obj->vec[1];
@@ -159,7 +159,7 @@ void		ft_render(t_window window, t_world world)
 	ray.dir[1] = world.view->dir[1];
 	ray.dir[2] = 1;
 
-	ray.obj_index = 0;
+	ray.obj_index = -5;
 
 	while (++x < RES_X)
 	{
