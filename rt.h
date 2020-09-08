@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:50 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/08 21:31:46 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/08 22:26:32 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,13 @@ typedef struct			s_ray
 	float				dir[3];
 	float				normal[3];
 	float				reflect[3];
+	int					obj_index;	//for bounces
 }						t_ray;
 
 typedef struct			s_objects
 {
 	int					type;	//index: plane, sphere, cylinder, cone
+	int					index;
 	float				vec[3];
 	float				modifier;
 	struct s_objects	*next;

@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 17:04:02 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/08 21:58:15 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/08 22:32:23 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,16 @@ t_objects	*ft_add_object(t_objects *obj, int type, char *values)
 	if (!(new = (t_objects *)malloc(sizeof(t_objects))))
 		ft_error("Failed to allocate memory\n");
 	if (!obj)
+	{
 		obj = new;
+		obj->index = 0;
+	}
 	else
 	{
 		while (obj->next)
-		{
 			obj = obj->next;
-		}
 		obj->next = new;
+		new->index = obj->index + 1;
 		obj = obj->next;
 	}
 	obj->type = type;

@@ -82,23 +82,32 @@ float		ft_trace_ray(t_objects *obj, t_objects *lights, t_ray ray, int bounces)
 {
 	float		hit;
 	float		tmp;
+	t_objects	*first;
 	t_objects	*hit_obj;
 
 	tmp = 0;
+	first = obj;
+	hit_obj = NULL;
 	while (obj)
 	{
 		hit = ft_choose_obj(ray, obj, ray);
-		if ((hit && hit < tmp) || !tmp)
+		if ((hit && hit < tmp) || !tmp && (bounces == 0 || ray.obj_index != obj->index))
 		{
 			tmp = hit;
 			hit_obj = obj;
+			ray.obj_index = obj->index;
 		}
+		if (bounces)
+			break ;
 		obj = obj->next;
 	}
+	if (!hit_obj)
+		return (0);
 	float res = tmp;
 	ray.normal[0] = res * ray.dir[0] - hit_obj->vec[0];
 	ray.normal[1] = res * ray.dir[1] - hit_obj->vec[1];
 	ray.normal[2] = res * ray.dir[2] - hit_obj->vec[2];
+
 	ray.reflect[0] = 2 * ray.normal[0] * (ray.dir[0] * ray.normal[0]);
 	ray.reflect[1] = 2 * ray.normal[1] * (ray.dir[1] * ray.normal[1]);
 	ray.reflect[2] = 2 * ray.normal[2] * (ray.dir[2] * ray.normal[2]);
@@ -111,11 +120,11 @@ float		ft_trace_ray(t_objects *obj, t_objects *lights, t_ray ray, int bounces)
 	ray.dir[1] = lights->vec[1];
 	ray.dir[2] = lights->vec[2];
 
-	// if (bounces < 1)
-	// 	hit = ft_trace_ray(hit_obj, lights, ray, bounces + 1);
-	// else
-	// 	return (tmp);
-	if (res)
+	if (!bounces)
+		tmp = ft_trace_ray(first, lights, ray, 1);
+	else
+		return (res);
+	if (res && !tmp)
 	{
 		res = ft_vector_dot(ray.normal, lights->vec) /
 			(ft_vector_length(ray.normal) * ft_vector_length(lights->vec));
@@ -146,34 +155,26 @@ void		ft_render(t_window window, t_world world)
 	ray.pos[1] = world.view->pos[1];
 	ray.pos[2] = world.view->pos[2];
 
-	ray.pos[0] = 0.01;
-	ray.pos[1] = 0.01;
-	ray.pos[2] = 0.01;
-
 	ray.dir[0] = world.view->dir[0];
 	ray.dir[1] = world.view->dir[1];
-	ray.dir[0] = -0.5;
-	ray.dir[1] = -0.5;
 	ray.dir[2] = 1;
-	printf("%f\n", world.first_light->vec[0]);
-	printf("%f\n", world.first_light->vec[1]);
-	printf("%f\n", world.first_light->vec[2]);
+
+	ray.obj_index = 0;
 
 	while (++x < RES_X)
 	{
 		y = 0;
-		// ray.dir[1] = 0 - world.view->normal[0] / 2;
 		ray.dir[1] = world.view->dir[1];
 		while (++y < RES_Y)
 		{
-			cast.dir[0] = ray.dir[0];
-			cast.dir[1] = ray.dir[1];
-			cast.dir[2] = ray.dir[2];
+			// cast.dir[0] = ray.dir[0];
+			// cast.dir[1] = ray.dir[1];
+			// cast.dir[2] = ray.dir[2];
 
-			cast.pos[0] = ray.pos[0];
-			cast.pos[1] = ray.pos[1];
-			cast.pos[2] = ray.pos[2];
-			res = ft_trace_ray(world.obj, world.lights, cast, 0);
+			// cast.pos[0] = ray.pos[0];
+			// cast.pos[1] = ray.pos[1];
+			// cast.pos[2] = ray.pos[2];
+			res = ft_trace_ray(world.obj, world.lights, ray, 0);
 			world.obj = world.first_obj;
 			world.lights = world.first_light;
 
@@ -188,13 +189,13 @@ void		ft_render(t_window window, t_world world)
 				int r = 15;
 				int g = 15;
 				int b = 15;
-				// if (hit == 1)
-				// if (ray_norm[0] > 0)
-				// r = ray_norm[0] * 255;
-				// if (ray_norm[1] > 0)
-				// g = ray_norm[1] * 255;
-				// if (ray_norm[2] > 0)
-				// b = ray_norm[2] * 255;
+
+				// if (ray.normal[0] > 0)
+				// 	r = ray.normal[0] * 255;
+				// if (ray.normal[1] > 0)
+				// 	g = ray.normal[1] * 255;
+				// if (ray.normal[2] > 0)
+				// 	b = ray.normal[2] * 255;
 
 				if (res < 2)
 				{
@@ -203,12 +204,7 @@ void		ft_render(t_window window, t_world world)
 					g += 255 - 255 * res;
 					b += 255 - 255 * res;
 				}
-
 				SDL_SetRenderDrawColor(window.SDLrenderer, r, g, b, 255);
-				// else
-				// 	SDL_SetRenderDrawColor(window.SDLrenderer, 255 * res * hit, 255 * res, 255 * res, 255);
-				// res *= hit;
-				// SDL_SetRenderDrawColor(window.SDLrenderer, 255, 255, 255, 255);
 			}
 			else
 				SDL_SetRenderDrawColor(window.SDLrenderer, 0, 0, 0, 255);
