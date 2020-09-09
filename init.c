@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 14:38:45 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/08 22:34:28 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/09 11:54:18 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void		ft_load_world(char *file, t_world *world)
 	world->obj = NULL;
 	world->lights = NULL;
 	world->first_obj = NULL;
+	world->first_light = NULL;
 	while (0 < (err = get_next_line(fd, &line)))
 	{
 		type = 0;

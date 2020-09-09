@@ -14,7 +14,35 @@
 
 float		ft_3d_plane(t_objects *plane, t_ray ray)
 {
-	float res;
+	float	res;
+	// float	rv[3];
+
+	// // plane->vec[2] = 0.01;
+	// ft_normalize(ray.dir);
+	// ft_normalize(ray.pos);
+
+	// rv[0] = ray.dir[0] - ray.pos[0];
+	// rv[1] = ray.dir[1] - ray.pos[1];
+	// rv[2] = ray.dir[2] - ray.pos[2];
+
+	// res = ft_vector_dot(plane->vec, rv);
+	// // plane->modifier = 1.2;
+	// // if (res > 0.01)
+	// if (res > 1 * M_E - 6)
+	// { 
+	// 	float p[3];
+	// 	p[0] = plane->vec[0] * plane->modifier;// - ray.pos[0];
+	// 	p[1] = plane->vec[1] * plane->modifier;// - ray.pos[1];
+	// 	p[2] = plane->vec[2] * plane->modifier;// - ray.pos[2];
+	// 	float n[3];
+	// 	n[0] = plane->vec[0];
+	// 	n[1] = plane->vec[1];
+	// 	n[2] = plane->vec[2];
+	// 	float t = ft_vector_dot(p, n) / res; 
+	// 	t*=10;
+	// 	return (t >= 0); 
+	// } 
+	// return (0);
 
 	res = ((ray.pos[0] * plane->vec[0]) +
 			(ray.pos[1] * plane->vec[1]) +
@@ -103,6 +131,7 @@ float		ft_trace_ray(t_objects *obj, t_objects *lights, t_ray ray, int bounces)
 	if (!hit_obj)
 		return (0);
 	ray.obj_index = hit_obj->index;
+
 	float res = tmp;
 	ray.normal[0] = res * ray.dir[0] - hit_obj->vec[0];
 	ray.normal[1] = res * ray.dir[1] - hit_obj->vec[1];
@@ -207,7 +236,7 @@ void		ft_render(t_window window, t_world world)
 				SDL_SetRenderDrawColor(window.SDLrenderer, r, g, b, 255);
 			}
 			else
-				SDL_SetRenderDrawColor(window.SDLrenderer, 0, 0, 0, 255);
+				SDL_SetRenderDrawColor(window.SDLrenderer, 10, 10, 10, 255);
 			SDL_RenderDrawPoint(window.SDLrenderer, x, y);
 
 			ray.dir[1] += ray_increment_y;
