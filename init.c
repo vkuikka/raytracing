@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 14:38:45 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/09 11:54:18 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/11 15:40:14 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ void		ft_load_world(char *file, t_world *world)
 	world->view->pos[0] = 0;
 	world->view->pos[1] = 0;
 	world->view->pos[2] = 0;
-	world->view->dir[0] = -0.5;
-	world->view->dir[1] = -0.5;
+	world->view->dir[0] = 0;
+	world->view->dir[1] = 0;
 	world->view->dir[2] = 1;
 	world->obj = NULL;
 	world->lights = NULL;
@@ -52,13 +52,13 @@ void		ft_load_world(char *file, t_world *world)
 		type = 0;
 		if (!strstr(line, "#"))
 		{
-			if ((str = ft_strstr(line, "cone")) && (type = 1))
+			if ((str = ft_strstr(line, "cone")) && (type = CONE))
 				str += ft_strlen("cone\0") + 1;
-			else if ((str = ft_strstr(line, "plane")) && (type = 2))
+			else if ((str = ft_strstr(line, "plane")) && (type = PLANE))
 				str += ft_strlen("plane") + 1;
-			else if ((str = ft_strstr(line, "sphere")) && (type = 3))
+			else if ((str = ft_strstr(line, "sphere")) && (type = SPHERE))
 				str += ft_strlen("sphere") + 1;
-			else if ((str = ft_strstr(line, "cylinder")) && (type = 4))
+			else if ((str = ft_strstr(line, "cylinder")) && (type = CYLINDER))
 				str += ft_strlen("cylinder") + 1;
 			else if ((str = ft_strstr(line, "pointlight")) && (type = -1))
 				str += ft_strlen("pointlight") + 1;

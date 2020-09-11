@@ -12,61 +12,36 @@
 
 #include "rt.h"
 
-float		ft_3d_plane(t_objects *plane, t_ray ray)
+double		ft_3d_plane(t_objects plane, t_ray r)
 {
-	float	res;
-	// float	rv[3];
-
-	// // plane->vec[2] = 0.01;
-	// ft_normalize(ray.dir);
-	// ft_normalize(ray.pos);
-
-	// rv[0] = ray.dir[0] - ray.pos[0];
-	// rv[1] = ray.dir[1] - ray.pos[1];
-	// rv[2] = ray.dir[2] - ray.pos[2];
-
-	// res = ft_vector_dot(plane->vec, rv);
-	// // plane->modifier = 1.2;
-	// // if (res > 0.01)
-	// if (res > 1 * M_E - 6)
-	// { 
-	// 	float p[3];
-	// 	p[0] = plane->vec[0] * plane->modifier;// - ray.pos[0];
-	// 	p[1] = plane->vec[1] * plane->modifier;// - ray.pos[1];
-	// 	p[2] = plane->vec[2] * plane->modifier;// - ray.pos[2];
-	// 	float n[3];
-	// 	n[0] = plane->vec[0];
-	// 	n[1] = plane->vec[1];
-	// 	n[2] = plane->vec[2];
-	// 	float t = ft_vector_dot(p, n) / res; 
-	// 	t*=10;
-	// 	return (t >= 0); 
-	// } 
-	// return (0);
-
-	res = ((ray.pos[0] * plane->vec[0]) +
-			(ray.pos[1] * plane->vec[1]) +
-			(ray.pos[2] * plane->vec[2])) - plane->modifier /
-			(ray.pos[0] * plane->vec[0] - ray.dir[0] * plane->vec[0] +
-			ray.pos[1] * plane->vec[1] - ray.dir[1] * plane->vec[1] +
-			ray.pos[2] * plane->vec[2] - ray.dir[2] * plane->vec[2]);
-	if (res > 0.0)
-		return (res);
-	return (0);
+	float denom = ft_vector_dot(plane.dir, r.dir); 
+    // if (denom > 0)
+    // if (denom < 1e-6)
+    if (denom < M_PI)
+	{
+		float asd[3];
+		asd[0] = r.pos[0] - plane.pos[0];
+		asd[1] = r.pos[1] - plane.pos[1];
+		asd[2] = r.pos[2] - plane.pos[2];
+		float t = ft_vector_dot(asd, plane.dir) / denom; 
+		if (t > 0)
+			return (t);
+	} 
+	return (0); 
 }
 
-float		ft_3d_sphere(t_objects *sphere, t_ray ray)
+float		ft_3d_sphere(t_objects sphere, t_ray ray)
 {
 	float	disc;
 
 	float	rsp[3];
-	rsp[0] = sphere->vec[0] - ray.pos[0];
-	rsp[1] = sphere->vec[1] - ray.pos[1];
-	rsp[2] = sphere->vec[2] - ray.pos[2];
+	rsp[0] = sphere.pos[0] - ray.pos[0];
+	rsp[1] = sphere.pos[1] - ray.pos[1];
+	rsp[2] = sphere.pos[2] - ray.pos[2];
 
 	float a = ft_vector_dot(ray.dir, ray.dir);
 	float b = 2 * ft_vector_dot(ray.dir, rsp);
-	float c = ft_vector_dot(rsp, rsp) - sphere->modifier * sphere->modifier;
+	float c = ft_vector_dot(rsp, rsp) - sphere.modifier * sphere.modifier;
 	disc = b * b - 4 * a * c;
 
 	float x0;
@@ -94,13 +69,13 @@ float		ft_3d_sphere(t_objects *sphere, t_ray ray)
 
 float		ft_choose_obj(t_ray ray, t_objects *obj)
 {
-	// if (type == 1)
+	// if (type == CONE)
 	// 	hit = ft_3d_cone(world->obj, world->view);
-	if (obj->type == 2)
-		return(ft_3d_plane(obj, ray));
-	else if (obj->type == 3)
-		return(ft_3d_sphere(obj, ray));
-	// else if (type == 4)
+	if (obj->type == PLANE)
+		return(ft_3d_plane(*obj, ray));
+	else if (obj->type == SPHERE)
+		return(ft_3d_sphere(*obj, ray));
+	// else if (type == CYLINDER)
 	// 	return(ft_3d_cylinder(world->obj, world->view));
 	ft_error("object not valid yet pls\n");
 	return (0);
@@ -120,7 +95,7 @@ float		ft_trace_ray(t_objects *obj, t_objects *lights, t_ray ray, int bounces)
 	{
 		hit = ft_choose_obj(ray, obj);
 		// if ((hit && hit < tmp) || !tmp && (bounces == 0 || ray.obj_index != obj->index))
-		if (!(bounces && obj->type == 2))
+		// if (!(bounces && obj->type == 2))
 		if (((hit && hit < tmp) || !tmp) && ray.obj_index != obj->index)
 		{
 			tmp = hit;
@@ -133,9 +108,9 @@ float		ft_trace_ray(t_objects *obj, t_objects *lights, t_ray ray, int bounces)
 	ray.obj_index = hit_obj->index;
 
 	float res = tmp;
-	ray.normal[0] = res * ray.dir[0] - hit_obj->vec[0];
-	ray.normal[1] = res * ray.dir[1] - hit_obj->vec[1];
-	ray.normal[2] = res * ray.dir[2] - hit_obj->vec[2];
+	ray.normal[0] = res * ray.dir[0] - hit_obj->pos[0];
+	ray.normal[1] = res * ray.dir[1] - hit_obj->pos[1];
+	ray.normal[2] = res * ray.dir[2] - hit_obj->pos[2];
 
 	ray.reflect[0] = 2 * ray.normal[0] * (ray.dir[0] * ray.normal[0]);
 	ray.reflect[1] = 2 * ray.normal[1] * (ray.dir[1] * ray.normal[1]);
@@ -145,9 +120,9 @@ float		ft_trace_ray(t_objects *obj, t_objects *lights, t_ray ray, int bounces)
 	ray.pos[1] = res * ray.dir[1];
 	ray.pos[2] = res * ray.dir[2];
 
-	ray.dir[0] = lights->vec[0];
-	ray.dir[1] = lights->vec[1];
-	ray.dir[2] = lights->vec[2];
+	ray.dir[0] = lights->pos[0];
+	ray.dir[1] = lights->pos[1];
+	ray.dir[2] = lights->pos[2];
 
 	if (!bounces)
 		tmp = ft_trace_ray(first, lights, ray, 1);
@@ -155,8 +130,8 @@ float		ft_trace_ray(t_objects *obj, t_objects *lights, t_ray ray, int bounces)
 		return (res);
 	if (res && !tmp)
 	{
-		res = ft_vector_dot(ray.normal, lights->vec) /
-			(ft_vector_length(ray.normal) * ft_vector_length(lights->vec));
+		res = ft_vector_dot(ray.normal, lights->pos) /
+			(ft_vector_length(ray.normal) * ft_vector_length(lights->pos));
 		res = acos(res);
 		return (res);
 	}

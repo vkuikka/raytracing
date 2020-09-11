@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   world_objects.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 17:04:02 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/09 11:54:21 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/11 15:46:52 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,13 @@ t_objects	*ft_add_object(t_objects *obj, int type, char *values)
 	i = 0;
 	while (i < 3)
 	{
-		obj->vec[i] = ft_atoi(values);	//use float atoi from printf
+		obj->pos[i] = ft_atoi(values);	//use float atoi from printf
+		if (type == PLANE)
+		{
+			obj->dir[0] = 0;
+			obj->dir[1] = -1;
+			obj->dir[2] = 0;
+		}
 		values = ft_next_num(values);
 		if (!values)
 			ft_error("given file is not valid\n");

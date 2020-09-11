@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/09 17:49:11 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/11 15:47:59 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ void	ft_loop(t_window *window, t_world world, SDL_Texture *txt)
 		world.obj->next->modifier += 0.1;
 
 	if (ft_buttons(SDL_SCANCODE_9, -1))
-		world.lights->vec[0] -= 1;
+		world.lights->pos[0] -= 1;
 	if (ft_buttons(SDL_SCANCODE_0, -1))
-		world.lights->vec[0] += 1;
+		world.lights->pos[0] += 1;
 
 	if (ft_buttons(SDL_SCANCODE_T, -1))
 		world.view->dir[1] -= 0.1;
@@ -81,30 +81,30 @@ void	ft_loop(t_window *window, t_world world, SDL_Texture *txt)
 		world.view->pos[0] += 0.1;
 
 	if (ft_buttons(SDL_SCANCODE_RIGHT, -1))
-		world.obj->next->vec[0] -= 0.1;
+		world.obj->next->dir[0] -= 0.1;
 	if (ft_buttons(SDL_SCANCODE_LEFT, -1))
-		world.obj->next->vec[0] += 0.1;
+		world.obj->next->dir[0] += 0.1;
 	if (ft_buttons(SDL_SCANCODE_UP, -1))
-		world.obj->next->vec[1] -= 0.1;
+		world.obj->next->dir[2] -= 0.1;
 	if (ft_buttons(SDL_SCANCODE_DOWN, -1))
-		world.obj->next->vec[1] += 0.1;
+		world.obj->next->dir[2] += 0.1;
 	if (ft_buttons(SDL_SCANCODE_N, -1))
-		world.obj->next->vec[2] -= 0.1;
+		world.obj->next->pos[1] -= 0.1;
 	if (ft_buttons(SDL_SCANCODE_M, -1))
-		world.obj->next->vec[2] += 0.1;
+		world.obj->next->pos[1] += 0.1;
 
 	if (ft_buttons(SDL_SCANCODE_A, -1))
-		world.obj->vec[0] -= 0.1;
+		world.obj->pos[0] -= 0.1;
 	if (ft_buttons(SDL_SCANCODE_D, -1))
-		world.obj->vec[0] += 0.1;
+		world.obj->pos[0] += 0.1;
 	if (ft_buttons(SDL_SCANCODE_W, -1))
-		world.obj->vec[1] -= 0.1;
+		world.obj->pos[1] -= 0.1;
 	if (ft_buttons(SDL_SCANCODE_S, -1))
-		world.obj->vec[1] += 0.1;
+		world.obj->pos[1] += 0.1;
 	if (ft_buttons(SDL_SCANCODE_Q, -1))
-		world.obj->vec[2] -= 0.1;
+		world.obj->pos[2] -= 0.1;
 	if (ft_buttons(SDL_SCANCODE_E, -1))
-		world.obj->vec[2] += 0.1;
+		world.obj->pos[2] += 0.1;
 	
 	SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);
 	SDL_SetRenderTarget(window->SDLrenderer, NULL);
