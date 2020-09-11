@@ -159,48 +159,32 @@ void		ft_render(t_window window, t_world world)
 	ray.pos[1] = world.view->pos[1];
 	ray.pos[2] = world.view->pos[2];
 
-	ray.dir[0] = world.view->dir[0];
-	ray.dir[1] = world.view->dir[1];
-	ray.dir[2] = 1;
 
 	ray.obj_index = -5;
 
+	ray.dir[0] = world.view->dir[0] - ray_increment_x * RES_X / 2;
+	ray.dir[2] = 1;
 	while (++x < RES_X)
 	{
 		y = 0;
-		ray.dir[1] = world.view->dir[1];
+		// ray.dir[1] = world.view->dir[1];
+		ray.dir[1] = world.view->dir[1] - ray_increment_y * RES_Y / 2;
 		while (++y < RES_Y)
 		{
-			// cast.dir[0] = ray.dir[0];
-			// cast.dir[1] = ray.dir[1];
-			// cast.dir[2] = ray.dir[2];
-
-			// cast.pos[0] = ray.pos[0];
-			// cast.pos[1] = ray.pos[1];
-			// cast.pos[2] = ray.pos[2];
 			res = ft_trace_ray(world.obj, world.lights, ray, 0);
 			world.obj = world.first_obj;
 			world.lights = world.first_light;
-
-			// if (y == RES_Y / 2 && x == RES_X / 2)
-			// {
-			// 	printf("%f\n", world.obj->vec[0]);
-			// 	printf("%f\n", world.view->dir[0]);
-			// 	printf("%f\n", res);
-			// }
 			if (res)
 			{
 				int r = 15;
 				int g = 15;
 				int b = 15;
-
 				// if (ray.normal[0] > 0)
 				// 	r = ray.normal[0] * 255;
 				// if (ray.normal[1] > 0)
 				// 	g = ray.normal[1] * 255;
 				// if (ray.normal[2] > 0)
 				// 	b = ray.normal[2] * 255;
-
 				if (res < 2)
 				{
 					res /= 2;
