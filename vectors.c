@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vectors.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vkuikka <vkuikka@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/07 18:13:00 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/07 19:28:22 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/14 19:28:59 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ void		ft_normalize(float vec1[3])
 	}
 }
 
-double		ft_vector_length(float vec[3])
+float		ft_vector_length(float vec[3])
 {
-	double	len;
+	float	len;
 	int		i;
 
 	i = 0;
@@ -91,7 +91,7 @@ double		ft_vector_length(float vec[3])
 	return (len);
 }
 
-double		ft_vector_dot(float ve1[3], float ve2[3])
+float		ft_vector_dot(float ve1[3], float ve2[3])
 {
 	return (ve1[0] * ve2[0] + ve1[1] * ve2[1] + ve1[2] * ve2[2]);
 }

@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:50 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/11 15:38:33 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/14 19:29:54 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ void		ft_draw_line(int line[4], t_window *window, float mid);
 void		ft_normalize_two(float vec1[3], float vec2[3]);
 void		ft_normalize(float vec1[3]);
 
-double		ft_vector_length(float vec[3]);
-double		ft_vector_dot(float ve1[3], float ve2[3]);
+float		ft_vector_length(float vec[3]);
+float		ft_vector_dot(float ve1[3], float ve2[3]);
 
 // void		ft_init_window(int argc, char **av, t_window *window, SDL_Texture *txt);
 void		ft_init_window(int argc, char **av, t_window **window, SDL_Texture **txt);
