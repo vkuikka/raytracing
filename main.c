@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/11 15:47:59 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/14 21:12:14 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,27 +58,28 @@ void	ft_loop(t_window *window, t_world world, SDL_Texture *txt)
 		world.obj->next->modifier += 0.1;
 
 	if (ft_buttons(SDL_SCANCODE_9, -1))
-		world.lights->pos[0] -= 1;
+		world.lights->pos[2] -= 0.3;
 	if (ft_buttons(SDL_SCANCODE_0, -1))
-		world.lights->pos[0] += 1;
+		world.lights->pos[2] += 0.3;
 
 	if (ft_buttons(SDL_SCANCODE_T, -1))
-		world.view->dir[1] -= 0.1;
+		world.view->dir[1] -= 0.05;
 	if (ft_buttons(SDL_SCANCODE_G, -1))
-		world.view->dir[1] += 0.1;
+		world.view->dir[1] += 0.05;
 	if (ft_buttons(SDL_SCANCODE_F, -1))
-		world.view->dir[0] -= 0.1;
+		world.view->dir[0] -= 0.05;
 	if (ft_buttons(SDL_SCANCODE_H, -1))
-		world.view->dir[0] += 0.1;
+		world.view->dir[0] += 0.05;
 
 	if (ft_buttons(SDL_SCANCODE_I, -1))
-		world.view->pos[2] += 0.1;
+		world.lights->pos[1] -= 0.5;
 	if (ft_buttons(SDL_SCANCODE_K, -1))
-		world.view->pos[2] -= 0.1;
+		world.lights->pos[1] += 0.5;
 	if (ft_buttons(SDL_SCANCODE_J, -1))
-		world.view->pos[0] -= 0.1;
+		world.lights->pos[0] -= 0.5;
 	if (ft_buttons(SDL_SCANCODE_L, -1))
-		world.view->pos[0] += 0.1;
+		world.lights->pos[0] += 0.5;
+		// world.view->pos[0] += 0.1;
 
 	if (ft_buttons(SDL_SCANCODE_RIGHT, -1))
 		world.obj->next->dir[0] -= 0.1;
@@ -88,10 +89,20 @@ void	ft_loop(t_window *window, t_world world, SDL_Texture *txt)
 		world.obj->next->dir[2] -= 0.1;
 	if (ft_buttons(SDL_SCANCODE_DOWN, -1))
 		world.obj->next->dir[2] += 0.1;
+
+	if (ft_buttons(SDL_SCANCODE_COMMA, -1))
+		world.obj->next->dir[1] -= 0.1;
+	if (ft_buttons(SDL_SCANCODE_SLASH, -1))
+		world.obj->next->dir[1] += 0.1;
+
 	if (ft_buttons(SDL_SCANCODE_N, -1))
 		world.obj->next->pos[1] -= 0.1;
 	if (ft_buttons(SDL_SCANCODE_M, -1))
 		world.obj->next->pos[1] += 0.1;
+	if (ft_buttons(SDL_SCANCODE_V, -1))
+		world.obj->next->pos[0] -= 0.1;
+	if (ft_buttons(SDL_SCANCODE_B, -1))
+		world.obj->next->pos[0] += 0.1;
 
 	if (ft_buttons(SDL_SCANCODE_A, -1))
 		world.obj->pos[0] -= 0.1;
