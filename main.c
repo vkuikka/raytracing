@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/14 21:12:14 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/17 00:55:34 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,17 +105,17 @@ void	ft_loop(t_window *window, t_world world, SDL_Texture *txt)
 		world.obj->next->pos[0] += 0.1;
 
 	if (ft_buttons(SDL_SCANCODE_A, -1))
-		world.obj->pos[0] -= 0.1;
+		world.obj->dir[0] -= 0.1;
 	if (ft_buttons(SDL_SCANCODE_D, -1))
-		world.obj->pos[0] += 0.1;
+		world.obj->dir[0] += 0.1;
 	if (ft_buttons(SDL_SCANCODE_W, -1))
-		world.obj->pos[1] -= 0.1;
+		world.obj->dir[1] -= 0.1;
 	if (ft_buttons(SDL_SCANCODE_S, -1))
-		world.obj->pos[1] += 0.1;
+		world.obj->dir[1] += 0.1;
 	if (ft_buttons(SDL_SCANCODE_Q, -1))
-		world.obj->pos[2] -= 0.1;
+		world.obj->dir[2] -= 0.1;
 	if (ft_buttons(SDL_SCANCODE_E, -1))
-		world.obj->pos[2] += 0.1;
+		world.obj->dir[2] += 0.1;
 	
 	SDL_SetRenderDrawColor(window->SDLrenderer, 0, 0, 0, 255);
 	SDL_SetRenderTarget(window->SDLrenderer, NULL);

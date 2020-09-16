@@ -1,6 +1,6 @@
-sphere(0, 0, 3, 1)
+cylinder(-2, -1, 5, 1)
 plane(0, 1, 1, 4)
+sphere(0, 0, 3, 1)
 sphere(2, -1, 5, 1)
-sphere(-2, -1, 5, 1)
 
 pointlight(0, -1, 0, 1)

@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 17:04:02 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/14 21:42:52 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/16 23:58:20 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,12 @@ t_objects	*ft_add_object(t_objects *obj, int type, char *values)
 			obj->dir[0] = 0;
 			obj->dir[1] = -3;
 			obj->dir[2] = 0;
+		}
+		else if (type == CYLINDER)
+		{
+			obj->dir[0] = -3;
+			obj->dir[1] = -5;
+			obj->dir[2] = 5;
 		}
 		values = ft_next_num(values);
 		if (!values)

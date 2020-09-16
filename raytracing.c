@@ -12,24 +12,21 @@
 
 #include "rt.h"
 
+int g_print = 0;
+
 float		ft_3d_plane(t_objects plane, t_ray r)
 {
 	float denom = ft_vector_dot(plane.dir, r.dir); 
-    // if (denom < M_PI)
-    // if (denom < 1e-6)
+    // if (fabs(denom) < M_PI)
     if (fabs(denom) > 1e-6)
 	{
-		float asd[3];
-		// asd[0] = r.pos[0] - plane.pos[0];
-		// asd[1] = r.pos[1] - plane.pos[1];
-		// asd[2] = r.pos[2] - plane.pos[2];
+		float rsp[3];
+		rsp[0] = plane.pos[0] - r.pos[0];
+		rsp[1] = plane.pos[1] - r.pos[1];
+		rsp[2] = plane.pos[2] - r.pos[2];
 
-		asd[0] = plane.pos[0] - r.pos[0];
-		asd[1] = plane.pos[1] - r.pos[1];
-		asd[2] = plane.pos[2] - r.pos[2];
-
-		float t = ft_vector_dot(asd, plane.dir) / denom; 
-		if (t > 0.01)
+		float t = ft_vector_dot(rsp, plane.dir) / denom; 
+		if (t > 0.00001)
 			return (t);
 	} 
 	return (0); 
@@ -47,6 +44,7 @@ float		ft_3d_sphere(t_objects sphere, t_ray ray)
 	float a = ft_vector_dot(ray.dir, ray.dir);
 	float b = 2 * ft_vector_dot(ray.dir, rsp);
 	float c = ft_vector_dot(rsp, rsp) - sphere.modifier * sphere.modifier;
+
 	disc = b * b - 4 * a * c;
 
 	float x0;
@@ -54,8 +52,7 @@ float		ft_3d_sphere(t_objects sphere, t_ray ray)
 
 	if (disc < 0)
 		return (0);
-
-	if (disc == 0)
+	else if (disc == 0)
 		x0 = x1 = - 0.5 * b / a; 
     else
 	{ 
@@ -65,23 +62,97 @@ float		ft_3d_sphere(t_objects sphere, t_ray ray)
         x0 = q / a; 
         x1 = c / q; 
     } 
-	if (x1 > 0 || x1 > -0.0)
+	if (x0 > x1)
+		x1 = x0;
+
+	if (x1 > 0)
 		x1 = 0;
 	x1 *= -1;
 	return (x1);
 	// return ((-b - sqrt(disc)) / (2.0 * a));
 }
 
+float		ft_3d_cylinder(t_objects cylinder, t_ray ray)
+{
+
+	// (p2- p1)/| p2- p1|
+	// AxisPoint = cylinder.pos + DotProduct(ray.pos - cylinder.pos) * cylinder.dir;
+	float	crossp[3];
+
+	crossp[0] = ray.dir[1] * cylinder.dir[2] - ray.dir[2] * cylinder.dir[1]; 
+	crossp[1] = ray.dir[2] * cylinder.dir[0] - ray.dir[0] * cylinder.dir[2]; 
+	crossp[2] = ray.dir[0] * cylinder.dir[1] - ray.dir[1] * cylinder.dir[0]; 
+
+	float	perp[3];
+	float	perp2[3];
+
+	perp[0] = cylinder.dir[1] * crossp[2] - cylinder.dir[2] * crossp[1]; 
+	perp[1] = cylinder.dir[2] * crossp[0] - cylinder.dir[0] * crossp[2]; 
+	perp[2] = cylinder.dir[1] * crossp[1] - cylinder.dir[1] * crossp[0]; 
+
+	perp2[0] = ray.dir[1] * crossp[2] - ray.dir[2] * crossp[1]; 
+	perp2[1] = ray.dir[2] * crossp[0] - ray.dir[0] * crossp[2]; 
+	perp2[2] = ray.dir[1] * crossp[1] - ray.dir[1] * crossp[0]; 
+
+	float	cdp[3];
+	float	cdp2[3];
+
+	cdp[0] = cylinder.pos[0] - ray.pos[0];
+	cdp[1] = cylinder.pos[1] - ray.pos[1];
+	cdp[2] = cylinder.pos[2] - ray.pos[2];
+
+	cdp2[0] = ray.pos[0] - cylinder.pos[0];
+	cdp2[1] = ray.pos[1] - cylinder.pos[1];
+	cdp2[2] = ray.pos[2] - cylinder.pos[2];
+
+
+	float d1 = ft_vector_dot(cdp, perp) / ft_vector_dot(ray.dir, perp);
+	float d2 = ft_vector_dot(cdp2, perp2) / ft_vector_dot(cylinder.dir, perp2);
+
+
+	float	res1[3];
+	res1[0] = d1 * ray.dir[0];
+	res1[1] = d1 * ray.dir[1];
+	res1[2] = d1 * ray.dir[2];
+	res1[0] += ray.pos[0];
+	res1[1] += ray.pos[1];
+	res1[2] += ray.pos[2];
+
+	float	res2[3];
+	res2[0] = d2 * ray.dir[0];
+	res2[1] = d2 * ray.dir[1];
+	res2[2] = d2 * ray.dir[2];
+	res2[0] += ray.pos[0];
+	res2[1] += ray.pos[1];
+	res2[2] += ray.pos[2];
+
+	res2[0] -= res1[0];
+	res2[1] -= res1[1];
+	res2[2] -= res1[2];
+
+	if (g_print)
+	{
+		printf("%f ", res1[0]);
+		printf("%f ", res1[1]);
+		printf("%f\n\n", res1[2]);
+	}
+
+	float	clen = ft_vector_length(res2);
+	if (clen > 0 && clen < cylinder.modifier)
+		return (clen);
+	return (0);
+}
+
 float		ft_choose_obj(t_ray ray, t_objects obj)
 {
 	// if (type == CONE)
-	// 	hit = ft_3d_cone(world->obj, world->view);
+		// return(ft_3d_cylinder(obj, ray));
 	if (obj.type == PLANE)
 		return(ft_3d_plane(obj, ray));
 	else if (obj.type == SPHERE)
 		return(ft_3d_sphere(obj, ray));
-	// else if (type == CYLINDER)
-	// 	return(ft_3d_cylinder(world->obj, world->view));
+	else if (obj.type == CYLINDER)
+		return(ft_3d_cylinder(obj, ray));
 	ft_error("object not valid yet pls\n");
 	return (0);
 }
@@ -98,6 +169,8 @@ float		ft_trace_ray(t_objects *obj, t_objects *lights, t_ray ray, int bounces)
 	hit_obj = NULL;
 	while (obj)
 	{
+		if (obj->type == CYLINDER && bounces)
+			obj = obj->next;
 		hit = ft_choose_obj(ray, *obj);
 		// if ((hit && hit < tmp) || !tmp && (bounces == 0 || ray.obj_index != obj->index))
 		// if (!bounces && obj->type == PLANE && hit)
@@ -114,13 +187,15 @@ float		ft_trace_ray(t_objects *obj, t_objects *lights, t_ray ray, int bounces)
 		return (0);
 	ray.obj_index = hit_obj->index;
 
+	if (hit_obj->type == CYLINDER)
+		return (tmp);
+
 	float res = tmp;
 	if (hit_obj->type == SPHERE)
 	{
 		ray.normal[0] = res * ray.dir[0] - hit_obj->pos[0];
 		ray.normal[1] = res * ray.dir[1] - hit_obj->pos[1];
 		ray.normal[2] = res * ray.dir[2] - hit_obj->pos[2];
-
 		// ray.reflect[0] = 2 * ray.normal[0] * (ray.dir[0] * ray.normal[0]);
 		// ray.reflect[1] = 2 * ray.normal[1] * (ray.dir[1] * ray.normal[1]);
 		// ray.reflect[2] = 2 * ray.normal[2] * (ray.dir[2] * ray.normal[2]);
@@ -145,6 +220,7 @@ float		ft_trace_ray(t_objects *obj, t_objects *lights, t_ray ray, int bounces)
 		tmp = ft_trace_ray(first, lights, ray, 1);
 	else
 		return (res);
+
 	if (res && !tmp)
 	{
 		res = ft_vector_dot(ray.normal, lights->pos) /
@@ -189,9 +265,13 @@ void		ft_render(t_window window, t_world world)
 		{
 			world.obj = world.first_obj;
 			world.lights = world.first_light;
-			res = ft_trace_ray(world.obj, world.lights, ray, 0);
 			if (x == RES_X / 2 && y == RES_Y / 2)
-				printf("%f\n", res);
+				g_print = 1;
+			else
+				g_print = 0;
+			res = ft_trace_ray(world.obj, world.lights, ray, 0);
+			// if (x == RES_X / 2 && y == RES_Y / 2)
+				// printf("%f\n", res);
 			if (res != 0.0)
 			{
 				int r = 0;
@@ -203,6 +283,7 @@ void		ft_render(t_window window, t_world world)
 				// 	g = ray.normal[1] * 255;
 				// if (ray.normal[2] > 0)
 				// 	b = ray.normal[2] * 255;
+				
 				int shadow = 0;
 				if (res < 0)
 				{
@@ -229,7 +310,7 @@ void		ft_render(t_window window, t_world world)
 				SDL_SetRenderDrawColor(window.SDLrenderer, r, g, b, 255);
 			}
 			else
-				SDL_SetRenderDrawColor(window.SDLrenderer, 0, 0, 0, 255);
+				SDL_SetRenderDrawColor(window.SDLrenderer, 0, 0, 50, 255);
 			SDL_RenderDrawPoint(window.SDLrenderer, x, y);
 
 			ray.dir[1] += ray_increment_y;
