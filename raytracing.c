@@ -34,8 +34,6 @@ float		ft_3d_plane(t_objects plane, t_ray r)
 
 float		ft_3d_sphere(t_objects sphere, t_ray ray)
 {
-	float	disc;
-
 	float	rsp[3];
 	rsp[0] = sphere.pos[0] - ray.pos[0];
 	rsp[1] = sphere.pos[1] - ray.pos[1];
@@ -45,7 +43,7 @@ float		ft_3d_sphere(t_objects sphere, t_ray ray)
 	float b = 2 * ft_vector_dot(ray.dir, rsp);
 	float c = ft_vector_dot(rsp, rsp) - sphere.modifier * sphere.modifier;
 
-	disc = b * b - 4 * a * c;
+	float disc = b * b - 4 * a * c;
 
 	float x0;
 	float x1;
@@ -74,73 +72,118 @@ float		ft_3d_sphere(t_objects sphere, t_ray ray)
 
 float		ft_3d_cylinder(t_objects cylinder, t_ray ray)
 {
-
 	// (p2- p1)/| p2- p1|
 	// AxisPoint = cylinder.pos + DotProduct(ray.pos - cylinder.pos) * cylinder.dir;
-	float	crossp[3];
 
-	crossp[0] = ray.dir[1] * cylinder.dir[2] - ray.dir[2] * cylinder.dir[1]; 
-	crossp[1] = ray.dir[2] * cylinder.dir[0] - ray.dir[0] * cylinder.dir[2]; 
-	crossp[2] = ray.dir[0] * cylinder.dir[1] - ray.dir[1] * cylinder.dir[0]; 
+	// cylinder.modifier = cylinder.dir[1] - ray.dir[1] * 2;
+	// cylinder.pos[0] = cylinder.dir[0];
+	// cylinder.pos[2] = cylinder.dir[2];
 
-	float	perp[3];
-	float	perp2[3];
+	cylinder.pos[1] = 0;
+	cylinder.dir[1] = 0;
+	ray.pos[1] = 0;
+	ray.dir[1] = 0;
 
-	perp[0] = cylinder.dir[1] * crossp[2] - cylinder.dir[2] * crossp[1]; 
-	perp[1] = cylinder.dir[2] * crossp[0] - cylinder.dir[0] * crossp[2]; 
-	perp[2] = cylinder.dir[1] * crossp[1] - cylinder.dir[1] * crossp[0]; 
-
-	perp2[0] = ray.dir[1] * crossp[2] - ray.dir[2] * crossp[1]; 
-	perp2[1] = ray.dir[2] * crossp[0] - ray.dir[0] * crossp[2]; 
-	perp2[2] = ray.dir[1] * crossp[1] - ray.dir[1] * crossp[0]; 
-
-	float	cdp[3];
-	float	cdp2[3];
-
-	cdp[0] = cylinder.pos[0] - ray.pos[0];
-	cdp[1] = cylinder.pos[1] - ray.pos[1];
-	cdp[2] = cylinder.pos[2] - ray.pos[2];
-
-	cdp2[0] = ray.pos[0] - cylinder.pos[0];
-	cdp2[1] = ray.pos[1] - cylinder.pos[1];
-	cdp2[2] = ray.pos[2] - cylinder.pos[2];
+	float	rsp[3];
+	rsp[0] = cylinder.pos[0] - ray.pos[0];
+	rsp[1] = cylinder.pos[1] - ray.pos[1];
+	rsp[2] = cylinder.pos[2] - ray.pos[2];
 
 
-	float d1 = ft_vector_dot(cdp, perp) / ft_vector_dot(ray.dir, perp);
-	float d2 = ft_vector_dot(cdp2, perp2) / ft_vector_dot(cylinder.dir, perp2);
+	float a = ft_vector_dot(ray.dir, ray.dir);
+	float b = 2 * ft_vector_dot(ray.dir, rsp);
+	float c = ft_vector_dot(rsp, rsp) - cylinder.modifier * cylinder.modifier;
+
+	float disc = b * b - 4 * a * c;
+
+	float x0;
+	float x1;
+
+	if (disc < 0)
+		return (0);
+	else if (disc == 0)
+		x0 = x1 = - 0.5 * b / a; 
+    else
+	{ 
+        float q = (b > 0) ? 
+            -0.5 * (b + sqrt(disc)) : 
+            -0.5 * (b - sqrt(disc)); 
+        x0 = q / a; 
+        x1 = c / q; 
+    } 
+	if (x0 > x1)
+		x1 = x0;
+
+	if (x1 > 0)
+		x1 = 0;
+	x1 *= -1;
+	return (x1);
+
+	// float	crossp[3];
+
+	// crossp[0] = ray.dir[1] * cylinder.dir[2] - ray.dir[2] * cylinder.dir[1]; 
+	// crossp[1] = ray.dir[2] * cylinder.dir[0] - ray.dir[0] * cylinder.dir[2]; 
+	// crossp[2] = ray.dir[0] * cylinder.dir[1] - ray.dir[1] * cylinder.dir[0]; 
+
+	// float	perp[3];
+	// float	perp2[3];
+
+	// perp[0] = cylinder.dir[1] * crossp[2] - cylinder.dir[2] * crossp[1]; 
+	// perp[1] = cylinder.dir[2] * crossp[0] - cylinder.dir[0] * crossp[2]; 
+	// perp[2] = cylinder.dir[1] * crossp[1] - cylinder.dir[1] * crossp[0]; 
+
+	// perp2[0] = ray.dir[1] * crossp[2] - ray.dir[2] * crossp[1]; 
+	// perp2[1] = ray.dir[2] * crossp[0] - ray.dir[0] * crossp[2]; 
+	// perp2[2] = ray.dir[1] * crossp[1] - ray.dir[1] * crossp[0]; 
+
+	// float	cdp[3];
+	// float	cdp2[3];
+
+	// cdp[0] = cylinder.pos[0] - ray.pos[0];
+	// cdp[1] = cylinder.pos[1] - ray.pos[1];
+	// cdp[2] = cylinder.pos[2] - ray.pos[2];
+
+	// cdp2[0] = ray.pos[0] - cylinder.pos[0];
+	// cdp2[1] = ray.pos[1] - cylinder.pos[1];
+	// cdp2[2] = ray.pos[2] - cylinder.pos[2];
 
 
-	float	res1[3];
-	res1[0] = d1 * ray.dir[0];
-	res1[1] = d1 * ray.dir[1];
-	res1[2] = d1 * ray.dir[2];
-	res1[0] += ray.pos[0];
-	res1[1] += ray.pos[1];
-	res1[2] += ray.pos[2];
+	// float d1 = ft_vector_dot(cdp, perp) / ft_vector_dot(ray.dir, perp);
+	// float d2 = ft_vector_dot(cdp2, perp2) / ft_vector_dot(cylinder.dir, perp2);
 
-	float	res2[3];
-	res2[0] = d2 * ray.dir[0];
-	res2[1] = d2 * ray.dir[1];
-	res2[2] = d2 * ray.dir[2];
-	res2[0] += ray.pos[0];
-	res2[1] += ray.pos[1];
-	res2[2] += ray.pos[2];
 
-	res2[0] -= res1[0];
-	res2[1] -= res1[1];
-	res2[2] -= res1[2];
+	// float	res1[3];
+	// res1[0] = d1 * ray.dir[0];
+	// res1[1] = d1 * ray.dir[1];
+	// res1[2] = d1 * ray.dir[2];
+	// res1[0] += ray.pos[0];
+	// res1[1] += ray.pos[1];
+	// res1[2] += ray.pos[2];
 
-	if (g_print)
-	{
-		printf("%f ", res1[0]);
-		printf("%f ", res1[1]);
-		printf("%f\n\n", res1[2]);
-	}
+	// float	res2[3];
+	// res2[0] = d2 * ray.dir[0];
+	// res2[1] = d2 * ray.dir[1];
+	// res2[2] = d2 * ray.dir[2];
+	// res2[0] += ray.pos[0];
+	// res2[1] += ray.pos[1];
+	// res2[2] += ray.pos[2];
 
-	float	clen = ft_vector_length(res2);
-	if (clen > 0 && clen < cylinder.modifier)
-		return (clen);
-	return (0);
+	// res1[0] -= res2[0];
+	// res1[1] -= res2[1];
+	// res1[2] -= res2[2];
+
+	// float	clen = ft_vector_length(res1);
+	// if (g_print)
+	// {
+	// 	// printf("%f ", res1[0]);
+	// 	// printf("%f ", res1[1]);
+	// 	// printf("%f\n", res1[2]);
+	// 	printf("%f\n", clen);
+	// }
+
+	// if (clen > 0 && clen < cylinder.modifier)
+	// 	return (clen);
+	// return (0);
 }
 
 float		ft_choose_obj(t_ray ray, t_objects obj)
