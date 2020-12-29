@@ -11,7 +11,9 @@
 # **************************************************************************** #
 
 NAME = RTv1
-FILES = main.c smoothstep.c weighted_avg.c draw.c raytracing.c vectors.c init.c world_objects.c
+SRCDIR = src/
+SRC = main.c smoothstep.c weighted_avg.c draw.c raytracing.c vectors.c init.c world_objects.c
+FILES=$(addprefix src/, $(SRC))
 LIB = libft/libft.a
 INCLUDE = libft/includes
 #FLAGS = -Wall -Wextra -Werror

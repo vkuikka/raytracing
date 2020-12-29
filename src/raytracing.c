@@ -353,7 +353,7 @@ void		ft_render(t_window window, t_world world)
 				SDL_SetRenderDrawColor(window.SDLrenderer, r, g, b, 255);
 			}
 			else
-				SDL_SetRenderDrawColor(window.SDLrenderer, 0, 0, 50, 255);
+				SDL_SetRenderDrawColor(window.SDLrenderer, 0, 0, 0, 255);
 			SDL_RenderDrawPoint(window.SDLrenderer, x, y);
 
 			ray.dir[1] += ray_increment_y;

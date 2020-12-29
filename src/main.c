@@ -6,15 +6,12 @@
 /*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/17 00:55:34 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/09/17 16:20:13 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
 #include <math.h>
-
-# include "SDL2.framework/Headers/SDL.h"
-# include "SDL2_image.framework/Headers/SDL_image.h"
 
 int		ft_buttons(int button, const int pressed)
 {
@@ -48,9 +45,9 @@ int		ft_buttons(int button, const int pressed)
 void	ft_loop(t_window *window, t_world world, SDL_Texture *txt)
 {
 	if (ft_buttons(SDL_SCANCODE_1, -1))
-		world.obj->modifier += 0.01;
+		world.obj->modifier += 0.1;
 	if (ft_buttons(SDL_SCANCODE_2, -1))
-		world.obj->modifier -= 0.01;
+		world.obj->modifier -= 0.1;
 
 	if (ft_buttons(SDL_SCANCODE_3, -1))
 		world.obj->next->modifier -= 0.1;
@@ -145,8 +142,6 @@ int			main(int argc, char **argv)
 
 	ft_init_window(argc, argv, &window, &txt);
 	ft_load_world(argv[1], &world);
-	printf("1: %f\n", world.obj->modifier);
-	printf("2: %f\n", world.obj->next->modifier);
 	while (1)
 	{
 		while (SDL_PollEvent(&event))
