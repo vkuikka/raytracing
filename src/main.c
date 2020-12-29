@@ -6,12 +6,11 @@
 /*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:42 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/17 16:20:13 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/12/30 00:17:07 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rt.h"
-#include <math.h>
 
 int		ft_buttons(int button, const int pressed)
 {
@@ -139,11 +138,13 @@ int			main(int argc, char **argv)
 	SDL_Event	event;
 	t_window	*window;
 	t_world		world;
+	unsigned	frametime;
 
 	ft_init_window(argc, argv, &window, &txt);
 	ft_load_world(argv[1], &world);
 	while (1)
 	{
+		frametime = SDL_GetTicks();
 		while (SDL_PollEvent(&event))
 		{
 			if (event.type == SDL_QUIT || event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
@@ -163,5 +164,11 @@ int			main(int argc, char **argv)
 				ft_load_world(argv[1], &world);
 		}
 		ft_loop(window, world, txt);
+		frametime = SDL_GetTicks() - frametime;
+		if (frametime < TICKTIME)
+		{
+			usleep((TICKTIME - frametime) * 1000);
+			printf("overtick: %u ms\n", (TICKTIME - frametime));
+		}
 	}
 }

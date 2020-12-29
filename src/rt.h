@@ -6,7 +6,7 @@
 /*   By: vkuikka <vkuikka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 18:28:50 by vkuikka           #+#    #+#             */
-/*   Updated: 2020/09/14 19:29:54 by vkuikka          ###   ########.fr       */
+/*   Updated: 2020/12/30 00:16:00 by vkuikka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,17 @@
 # define PLANE 2
 # define SPHERE 3
 # define CYLINDER 4
+# define TICKTIME 100	//milliseconds (1s = 1000ms)
 
 #include <stdio.h>
 
 # include <math.h>
 # include <fcntl.h>
+# include <sys/time.h>
 # include "get_next_line.h"
 # include "SDL2/SDL.h"
 # include "SDL2_image/SDL_image.h"
+
 
 typedef struct			s_window
 {
@@ -49,17 +52,17 @@ typedef struct			s_objects
 	int					type;		//cone, plane, sphere, cylinder or negative numbers for lights
 	int					index;
 	float				dir[3];		//not used with sphere
-	float				pos[3];
-	float				modifier;	//for example the size of sphere or cylinder
+	float				pos[3];		//position of object
+	float				modifier;	//e.g. the size of sphere or cylinder
 	struct s_objects	*next;		//linked list so new objects can easily be added
 }						t_objects;
 
 typedef struct			s_world
 {
 	struct s_objects	*obj;			//linked list of objects in world
-	struct s_objects	*first_obj;		//used for reversing object linked list
+	struct s_objects	*first_obj;		//first pointer of above linked list
 	struct s_objects	*lights;		//linked list of lights in world
-	struct s_objects	*first_light;	//used for reversing light linked list
+	struct s_objects	*first_light;	//first pointer of above linked list
 	struct s_ray		*view;			//first ray that is cast from the "eye"
 }						t_world;
 
